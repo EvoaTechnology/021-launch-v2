@@ -1498,7 +1498,7 @@ export default function ChatPage() {
           <div className="h-40 w-full bg-transparent">
             <CSuiteAdvisorCard
               name="CFO"
-              isLocked={true}
+              isLocked={false}
               title="Chief Financial Officer"
               expertise="Financial Strategy & Risk Management"
               avatar={CFOImage}
@@ -1515,7 +1515,7 @@ export default function ChatPage() {
           <div className="h-40 w-full bg-transparent">
             <CSuiteAdvisorCard
               name="CTO"
-              isLocked={true}
+              isLocked={false}
               title="Chief Technology Officer"
               expertise="Digital Transformation & Innovation"
               avatar={CTOImage}
@@ -1532,7 +1532,7 @@ export default function ChatPage() {
           <div className="h-40 w-full bg-transparent">
             <CSuiteAdvisorCard
               name="CMO"
-              isLocked={true}
+              isLocked={false}
               title="Chief Marketing Officer"
               expertise="Marketing Strategy & Brand Building"
               avatar={CMOImage}
