@@ -31,7 +31,7 @@ export async function callXAIAPI(
   }
 
   // ✅ Build concise system prompt
-  const systemInstructionText = buildSystemPrompt(activeRole, 0);
+  const systemInstructionText = buildSystemPrompt(activeRole);
 
   // ✅ Normalize messages
   const safeMessages = (messages || [])

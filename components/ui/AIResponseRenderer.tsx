@@ -7,6 +7,10 @@ interface AIResponseRendererProps {
   className?: string;
 }
 
+// Extend li props to safely allow `ordered` from react-markdown context
+type LiProps = React.ComponentPropsWithoutRef<'li'> & { ordered?: boolean; node?: unknown };
+type CodeProps = React.ComponentPropsWithoutRef<'code'> & { inline?: boolean; node?: unknown };
+
 const AIResponseRenderer: React.FC<AIResponseRendererProps> = ({ 
   content, 
   className = "" 
@@ -64,8 +68,8 @@ const AIResponseRenderer: React.FC<AIResponseRendererProps> = ({
           ol: ({ node, ...props }) => (
             <ol className="list-none mb-6 space-y-2 text-gray-200 counter-reset-list" {...props} />
           ),
-          li: ({ node, ordered, ...props }) => 
-            ordered ? (
+          li: ({ node, ...props }: LiProps) => 
+            props.ordered ? (
               <li className="flex items-start space-x-3 counter-increment-list">
                 <span className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold counter-display"></span>
                 <span className="flex-1 pt-0.5" {...props} />
@@ -78,8 +82,8 @@ const AIResponseRenderer: React.FC<AIResponseRendererProps> = ({
             ),
           
           // Code
-          code: ({ node, inline, ...props }) => 
-            inline ? (
+          code: ({ node, ...props }: CodeProps) => 
+            props.inline ? (
               <code className="bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm font-mono font-semibold" {...props} />
             ) : (
               <code className="block text-gray-400 p-4 rounded-xl overflow-x-auto text-sm font-mono " {...props} />

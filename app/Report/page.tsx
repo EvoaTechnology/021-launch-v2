@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   ValidationReport,
@@ -8,7 +8,7 @@ import {
 } from "../../components/ui/ValidationReport";
 import { parseTaggedReport } from "../../lib/services/report-parser";
 
-export default function Page() {
+function ReportPageInner() {
   const params = useSearchParams();
   const router = useRouter();
   const sessionId = params.get("sessionId");
@@ -86,4 +86,18 @@ export default function Page() {
   }
 
   return <ValidationReport data={data} />;
+}
+
+export default function Page() {
+  return (
+    <Suspense
+      fallback={
+        <div className="w-full h-screen flex items-center justify-center text-white">
+          Loading...
+        </div>
+      }
+    >
+      <ReportPageInner />
+    </Suspense>
+  );
 }

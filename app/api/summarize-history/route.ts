@@ -26,10 +26,7 @@ JSON shape:
 Messages:
 `;
 
-// ✅ Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Note: Avoid creating OpenAI client at module scope to prevent build-time env requirement
 
 type OldMsg = { role: "user" | "ai"; content: string };
 
@@ -41,6 +38,11 @@ async function generateAISummary(messages: OldMsg[]): Promise<{
 }> {
   const maxRetries = 2;
   let lastError: Error | null = null;
+
+  const openaiApiKey = process.env.OPENAI_API_KEY;
+  if (!openaiApiKey) {
+    logger.warn("⚠️ [SUMMARIZATION] OPENAI_API_KEY missing; using regex fallback");
+  }
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -55,6 +57,11 @@ async function generateAISummary(messages: OldMsg[]): Promise<{
         hasOpenAIKey: !!process.env.OPENAI_API_KEY,
       });
 
+      if (!openaiApiKey) {
+        throw new Error("Missing OPENAI_API_KEY");
+      }
+
+      const openai = new OpenAI({ apiKey: openaiApiKey });
       const response = await openai.chat.completions.create({
         model: "gpt-4o-mini", // efficient & structured output
         messages: [

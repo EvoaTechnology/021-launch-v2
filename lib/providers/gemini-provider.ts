@@ -8,6 +8,14 @@ import { logger } from "../utils/logger";
 import type { ProviderMessage } from "../../types/shared";
 type ProviderRole = "user" | "assistant" | "system";
 
+// Minimal Gemini response part typing
+type GeminiContentPart = {
+  text?: string;
+  inline_data?: {
+    data?: string;
+  };
+};
+
 function toGeminiRole(role: ProviderRole): "user" | "model" {
   return role === "assistant" ? "model" : "user";
 }
@@ -310,10 +318,11 @@ export async function callGeminiForReport(
 
   const data = await response.json();
   console.log("data", data);
-  const parts = data?.candidates?.[0]?.content?.parts || [];
+  const parts: GeminiContentPart[] =
+    (data?.candidates?.[0]?.content?.parts as GeminiContentPart[]) || [];
   console.log("parts", parts);
   const textFromParts = parts
-    .map((p) => (typeof p?.text === "string" ? p.text : ""))
+    .map((p: GeminiContentPart) => (typeof p?.text === "string" ? p.text : ""))
     .filter((t) => t && t.trim().length > 0)
     .join("\n")
     .trim();
@@ -321,7 +330,7 @@ export async function callGeminiForReport(
   if (textFromParts) return textFromParts;
 
   const inlineFromParts = parts
-    .map((p) =>
+    .map((p: GeminiContentPart) =>
       typeof p?.inline_data?.data === "string" ? p.inline_data.data : ""
     )
     .filter((t) => t && t.trim().length > 0)
